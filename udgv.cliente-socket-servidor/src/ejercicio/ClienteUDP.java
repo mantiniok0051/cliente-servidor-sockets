@@ -7,16 +7,21 @@ import java.net.InetAddress;
 import java.util.Scanner;
 
 
-public class ClienteUDP {
-
+public class ClienteUDP implements Runnable {
+@SuppressWarnings("unused")
+    private int puertoRemoto;
     private DatagramSocket socketUDP;
     private InetAddress direccionServidor;
     private int puertoLocal;
     private Scanner teclado;
-    @SuppressWarnings("unused")
-	private int puertoRemoto;
-    
-    
+	
+//---------------- Atributos para el trabajo con hilos -----------------//
+    private HiloClienteUDP hiloCliente = null;
+    private Thread hilo                = null;
+    private FataInputStream console    = null;
+    private DataOutputStream streamOut = null;
+	
+   
     private ClienteUDP(String direccionDestino, int remoto, int local) throws IOException {
         this.direccionServidor = InetAddress.getByName(direccionDestino);
         this.puertoRemoto = 7077;
@@ -27,7 +32,7 @@ public class ClienteUDP {
     
     public static void main(String[] args) throws NumberFormatException, IOException {        
     	ClienteUDP sesion = new ClienteUDP(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-        System.out.println("-- Sesión ClienteUDP inicializada, la dirección local es: " + InetAddress.getLocalHost() + " --");
+        System.out.println("-- SesiÃ³n ClienteUDP inicializada, la direcciÃ³n local es: " + InetAddress.getLocalHost() + " --");
         sesion.iniciarSesion();
     }
     
